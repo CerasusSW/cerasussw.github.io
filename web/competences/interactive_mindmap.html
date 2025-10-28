@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Interaktive Mindmap — Kompetenzen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Francois+One&family=Noto+Sans&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: system-ui, sans-serif;
+      font-family: 'Noto Sans', sans-serif;
       background: transparent;
       color: #111;
       display: flex;
@@ -30,7 +31,7 @@
 
     .bubble {
       border: 2px solid #bbb;
-      border-radius: 14px;
+      border-radius: 0;
       width: 320px;
       display: flex;
       flex-direction: column;
@@ -38,7 +39,7 @@
       background: #E7E7E7;
       overflow: hidden;
       position: relative;
-      height: 600px; /* Fixierte Höhe verhindert Springen */
+      height: 600px;
     }
 
     .bubble:hover {
@@ -47,13 +48,12 @@
       border-color: #555;
     }
 
-    /* Fester Header für gleiche Trennlinie */
     .bubble-header {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 120px; /* Feste Höhe für gleichmäßige Trennlinie */
+      height: 120px;
       padding: 12px;
       background: #F5F5F5;
       border-bottom: 2px solid #e0e0e0;
@@ -66,9 +66,11 @@
     }
 
     .label {
-      font-weight: 700;
+      font-family: 'Francois One', sans-serif;
+      font-weight: 400;
       font-size: 1.05em;
       text-align: center;
+      text-transform: uppercase;
     }
 
     .subcategories {
@@ -79,14 +81,13 @@
       scroll-behavior: smooth;
     }
 
-    /* Scrollleiste unsichtbar */
     .subcategories::-webkit-scrollbar {
       width: 0px;
       background: transparent;
     }
     .subcategories {
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE / Edge */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
     .subcategory {
@@ -94,17 +95,16 @@
       font-weight: 600;
       cursor: pointer;
       padding: 6px 8px;
-      border-radius: 8px;
+      border-radius: 0;
       transition: background 0.2s ease;
       position: relative;
     }
 
     .subcategory:hover {
-      background: #eef5ff;
-      color: #007acc;
+      background: #f4b4b7; /* light red hover */
+      color: #c4232e;
     }
 
-    /* Sanftes Öffnen der Skills */
     .skills {
       margin: 4px 0 8px 16px;
       max-height: 0;
@@ -206,7 +206,6 @@
         sub.appendChild(skillList);
         subsContainer.appendChild(sub);
 
-        // sanftes Öffnen und Schließen bei Hover
         sub.addEventListener('mouseenter', () => sub.classList.add('open'));
         sub.addEventListener('mouseleave', () => sub.classList.remove('open'));
       });
