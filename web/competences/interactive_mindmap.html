@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interaktive Mindmap — Kompetenzen</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: transparent;
+      color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 40px 0;
+    }
+
+    .mindmap {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      text-align: left;
+    }
+
+    .bubble {
+      border: 2px solid #ccc;
+      border-radius: 14px;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+      background: #fafafa;
+      overflow: hidden;
+      position: relative;
+      height: 520px; /* Fixierte Höhe verhindert Springen */
+    }
+
+    .bubble:hover {
+      transform: scale(1.03);
+      background: #f0f0f0;
+      border-color: #bbb;
+    }
+
+    /* Fester Header für gleiche Trennlinie */
+    .bubble-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 120px; /* Feste Höhe für gleichmäßige Trennlinie */
+      padding: 12px;
+      background: #f9f9f9;
+      border-bottom: 2px solid #e0e0e0;
+      flex-shrink: 0;
+    }
+
+    .icon {
+      font-size: 1.8em;
+      margin-bottom: 6px;
+    }
+
+    .label {
+      font-weight: 700;
+      font-size: 1.05em;
+      text-align: center;
+    }
+
+    .subcategories {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 12px;
+      background: none;
+      scroll-behavior: smooth;
+    }
+
+    /* Scrollleiste unsichtbar */
+    .subcategories::-webkit-scrollbar {
+      width: 0px;
+      background: transparent;
+    }
+    .subcategories {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE / Edge */
+    }
+
+    .subcategory {
+      margin-bottom: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+      position: relative;
+    }
+
+    .subcategory:hover {
+      background: #eef5ff;
+      color: #007acc;
+    }
+
+    /* Sanftes Öffnen der Skills */
+    .skills {
+      margin: 4px 0 8px 16px;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+    }
+
+    .subcategory.open .skills {
+      max-height: 500px;
+      opacity: 1;
+    }
+
+    .skill {
+      font-size: 0.9em;
+      margin-left: 6px;
+      color: #333;
+      padding: 2px 0;
+    }
+
+    @media (max-width: 768px) {
+      body { height: auto; padding: 40px 0; }
+      .mindmap { flex-direction: column; align-items: center; }
+      .bubble { width: 92%; max-width: 420px; height: auto; }
+      .bubble-header { height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mindmap">
+    <div class="bubble" data-key="automation">
+      <div class="bubble-header">
+        <div class="icon">⚙️</div>
+        <div class="label">Automation<br>Elektrik<br>Digitale Kompetenzen</div>
+      </div>
+      <div class="subcategories"></div>
+    </div>
+
+    <div class="bubble" data-key="verfahrenstechnik">
+      <div class="bubble-header">
+        <div class="icon">🧪</div>
+        <div class="label">Verfahrenstechnik</div>
+      </div>
+      <div class="subcategories"></div>
+    </div>
+
+    <div class="bubble" data-key="softskills">
+      <div class="bubble-header">
+        <div class="icon">💼</div>
+        <div class="label">Soft Skills<br>Organisation<br>Management</div>
+      </div>
+      <div class="subcategories"></div>
+    </div>
+  </div>
+
+  <script>
+    const DATA = {
+      automation: {
+        "SPS & Steuerungstechnik": ["SPS – Beckhoff (TwinCAT)", "Beckhoff Solution Provider", "(SPS – Siemens)", "Kleinststeuerungen"],
+        "Daten & Digitalisierung": ["Datenauswertung und -Analyse", "Datenbanken und Datenmanagement (SQL)", "Digitaler Zwilling / Simulationen", "MES-/MOM-Schnittstellen", "Advanced Analytics"],
+        "Elektrik / Elektronik": ["Elektrische Auslegung", "Elektrische Montage", "Elektrokonstruktion / E-Schema", "Elektronik-Entwicklung (PCB)", "UL-Konformität", "Produkt- und System-Integration"],
+        "Robotik & Regelung": ["Antriebs-Auslegung", "Machine Vision", "Regelungstechnik", "Robotik", "Pneumatik"],
+        "Software & Systeme": ["HMI / Webdesign", "Hochsprachen (Phyton, C++, etc.)", "Frontend-HMI's", "Schnittstellen an SCADA-, MES-, ERP-Systeme", "Software-Konzepte", "Industrial Cybersecurity (CRA)"]
+      },
+      verfahrenstechnik: {
+        "Mechanik & Konstruktion": ["Mechanische Auslegung", "Mechanische Konstruktion (CAD)", "Mechanische Montage", "Schweiss- / Fügetechnologien"],
+        "Prozess- & Fluidtechnik": ["Fluid- und Thermodynamik", "Hydraulik", "Gastechnik für Anlagen – Messketten, Regelung, Safety & Daten", "Dichtungstechnik", "Verbrennungstechnik"],
+        "Anlagen & Sicherheit": ["Druckbehälter / Apparatebau (DGRL / EN 13445)", "Maschinensicherheit nach ISO 13849 / IEC 62061", "Maschinenverordnung", "ATEX 2014/34/EU und 1999/92/EG", "Risikoanalyse ISO 12100"],
+        "Konstruktion & Dokumentation": ["Maschinen- und Anlagenkonzepte", "Maschinen- und Anlagen-Dokumentation", "P&ID / PFD – Diagramme", "FEM und CFD-Berechnungen"],
+        "Regulatorien & Branchen": ["Regulatorien Food", "Regulatorien Medizintechnik / Pharma", "Regulatorien Automotive", "Regulatorien Aviation", "regulatorisch agil"]
+      },
+      softskills: {
+        "Projektmanagement & Organisation": ["Projektleitung", "Projektmanagement", "FAT / SAT Planung / Durchführung", "Pflichtenheft-Erstellung", "LEAN", "KVP"],
+        "Kommunikation & Entwicklung": ["Meeting-Organisation", "Präsentationstechnik", "Sprachen (Englisch, Französisch, Italienisch)", "Pädagogik", "Social Media"],
+        "Management & Beschaffung": ["Beschaffung und Einkauf", "CE-Konformität", "Kostenschätzung / Offert-Erstellung", "Kundenbetreuung", "Partner und Netzwerk"],
+        "Behörden & benannte Stellen": ["Vorprüfungen", "Eingabeunterlagen erstellen", "normkonforme Dokumentation", "Abnahmen und wiederkehrende Prüfungen", "Begleitung Kunden"],
+        "Qualität & Systeme": ["Qualitäts- & Managementsysteme (ISO 9001, ISO 14001)", "Transporte / Import / Export", "Geschäftsentwicklung"]
+      }
+    };
+
+    document.querySelectorAll('.bubble').forEach(bubble => {
+      const key = bubble.dataset.key;
+      const subsContainer = bubble.querySelector('.subcategories');
+      const subs = DATA[key];
+
+      Object.entries(subs).forEach(([subName, skills]) => {
+        const sub = document.createElement('div');
+        sub.className = 'subcategory';
+        sub.textContent = subName;
+
+        const skillList = document.createElement('div');
+        skillList.className = 'skills';
+        skills.forEach(s => {
+          const skill = document.createElement('div');
+          skill.className = 'skill';
+          skill.textContent = s;
+          skillList.appendChild(skill);
+        });
+        sub.appendChild(skillList);
+        subsContainer.appendChild(sub);
+
+        // sanftes Öffnen und Schließen bei Hover
+        sub.addEventListener('mouseenter', () => sub.classList.add('open'));
+        sub.addEventListener('mouseleave', () => sub.classList.remove('open'));
+      });
+    });
+  </script>
+</body>
+</html>
