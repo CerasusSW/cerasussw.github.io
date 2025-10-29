@@ -39,8 +39,7 @@
       background: #E7E7E7;
       overflow: hidden;
       position: relative;
-      height: 600px;
-      max-height: none;
+      height: 600px; /* Fixe Höhe für Desktop */
     }
 
     .bubble:hover {
@@ -54,7 +53,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100px;
+      height: 120px; /* Fixe Höhe für Desktop */
       padding: 12px;
       background: #F5F5F5;
       border-bottom: 2px solid #e0e0e0;
@@ -86,10 +85,6 @@
     .subcategories::-webkit-scrollbar {
       width: 0px;
       background: transparent;
-    }
-    .subcategories {
-      scrollbar-width: none;
-      -ms-overflow-style: none;
     }
 
     .subcategory {
@@ -128,6 +123,7 @@
       padding: 2px 0;
     }
 
+    /* Mobile Styles */
     @media (max-width: 768px) {
       body {
         height: auto;
@@ -140,8 +136,10 @@
       .bubble {
         width: 100%;
         max-width: 420px;
+        height: auto; /* flexible Höhe */
       }
       .bubble-header {
+        height: auto;
         min-height: 80px;
       }
     }
@@ -220,17 +218,23 @@
         sub.appendChild(skillList);
         subsContainer.appendChild(sub);
 
-        // Hover (Desktop) und Klick (Mobil) zum Öffnen
+        // Klick/Touch – nur eine Subcategory gleichzeitig offen
+        sub.addEventListener('click', () => {
+          subsContainer.querySelectorAll('.subcategory').forEach(other => {
+            if (other !== sub) {
+              other.classList.remove('open', 'active');
+            }
+          });
+          sub.classList.toggle('open');
+          sub.classList.toggle('active');
+        });
+
+        // Desktop-Hover
         sub.addEventListener('mouseenter', () => {
           if (!('ontouchstart' in window)) sub.classList.add('open');
         });
         sub.addEventListener('mouseleave', () => {
           if (!('ontouchstart' in window)) sub.classList.remove('open');
-        });
-
-        sub.addEventListener('click', () => {
-          sub.classList.toggle('open');
-          sub.classList.toggle('active');
         });
       });
     });
