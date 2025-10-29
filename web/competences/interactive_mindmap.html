@@ -220,11 +220,14 @@
 
         // Klick/Touch – nur eine Subcategory gleichzeitig offen
         sub.addEventListener('click', () => {
-          subsContainer.querySelectorAll('.subcategory').forEach(other => {
+          // Alle offenen Subcategories auf der gesamten Seite schließen
+          document.querySelectorAll('.subcategory.open, .subcategory.active').forEach(other => {
             if (other !== sub) {
               other.classList.remove('open', 'active');
             }
           });
+
+          // Nur die angeklickte öffnen/schließen
           sub.classList.toggle('open');
           sub.classList.toggle('active');
         });
