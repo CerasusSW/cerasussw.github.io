@@ -232,12 +232,21 @@
           sub.classList.toggle('active');
         });
 
-        // Desktop-Hover
+        // Desktop-Hover (öffnet nur beim Überfahren)
         sub.addEventListener('mouseenter', () => {
-          if (!('ontouchstart' in window)) sub.classList.add('open');
+          if (!('ontouchstart' in window)) {
+            // Alle anderen schließen
+            document.querySelectorAll('.subcategory.open, .subcategory.active').forEach(other => {
+              if (other !== sub) other.classList.remove('open', 'active');
+            });
+            sub.classList.add('open', 'active');
+          }
         });
+
         sub.addEventListener('mouseleave', () => {
-          if (!('ontouchstart' in window)) sub.classList.remove('open');
+          if (!('ontouchstart' in window)) {
+            sub.classList.remove('open', 'active');
+          }
         });
       });
     });
